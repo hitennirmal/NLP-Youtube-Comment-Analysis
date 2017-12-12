@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>Movie trailer score</title>
+    <!-- <h1>Movie trailer reviews</h1> -->
+    
+    <link rel="stylesheet" href="style.css" type="text/css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="css/heroic-features.css" rel="stylesheet">
+    <link href="css/browsebutton.css" rel="stylesheet">
+
+
+    <!-- Resources -->      <!-- for the pie Chart -->
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/pie.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+
+    <script src="pie_chart.js"></script>
+    <!-- for the pie Chart -->
+
+    <script>
+        var data="";
+        var url = "Output.json";
+        var Output = $.getJSON(url);
+        Output.done(function(result){
+            data = result;
+        });
+    </script>
+
+
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container" align ="center">
+              <a class="navbar-brand" id="welcome" href="#"><h4>
+              Pick a Movie Trailer
+              </h4>
+              </a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                          
+    </nav>
+      
+          <br/>
+          <br/>
+          <br>
+    <!-- Page Content -->
+	<!-- <div class="row text-center"> -->
+
+    <!-- <div id="movies_div"><br/></div> -->
+    <table id="movies_div"></table>
+    <!-- <button id="v8RBaQq_7t4" onclick="open_modal(this)">Find Movie sentiment</button> -->
+    <script>
+        setTimeout(function(){
+            var i=0;
+            while(i<data.length){
+                document.getElementById('movies_div').innerHTML += "<tr>"
+                document.getElementById('movies_div').lastChild.lastChild.innerHTML += bhai(i);
+                i++;
+                document.getElementById('movies_div').lastChild.lastChild.innerHTML += bhai(i);
+                i++;
+                document.getElementById('movies_div').lastChild.lastChild.innerHTML += bhai(i);
+                i++;
+                document.getElementById('movies_div').lastChild.lastChild.innerHTML += bhai(i);
+                i++;
+                document.getElementById('movies_div').innerHTML +="</tr>";
+            }
+        },2000);
+
+        
+        function bhai(k){
+            var text = "<td class='behen'>"
+                    +"<div id='"+k+"' class='card' onclick='open_modal(this)'>"
+                    +"<img class='card-img-top' src='Posters/"+data[k].poster+"' alt=''>"
+                    +"<div class='card-body'>"
+                    +"<h4 class='card-title'>"+data[k].name+"</h4>"
+                    +"</div>"
+                    +"</div>"
+                    +"</td>";
+
+            return text;
+        }
+    </script>
+    </div>
+    <!-- /.row -->
+
+  <!-- </div>  -->
+  
+  <!-- /.container -->
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Advanced Information Systems 2017</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+    <!-- Modal div starts here -->
+    <div id="myModal" class="modal">
+        
+          <!-- Modal content -->
+          <div class="modal-content">
+            <div class="modal-header">
+              <span id="close">&times;</span>
+              <h2>Movie Name</h2>
+            </div>
+            <div class="modal-body" id="modal_text">
+                <!-- Content will be put here by the javascript below -->
+            </div>
+          </div>
+        
+    </div> <!-- modal div ends here -->
+
+
+        <script>
+            // Get the modal
+            var modal = document.getElementById('myModal');
+            // Get the <span> element that closes the modal
+            var span = document.getElementById("close");
+
+            var movie_name = modal.getElementsByTagName("h2")[0];
+            var content = document.getElementById("modal_text");
+            
+            // When the user clicks the Movie div, open the modal 
+                function open_modal(elt){
+                modal.style.display = "block";
+                movie_name.innerHTML = data[elt.id].name;
+                content.innerHTML = "<div class='movie'>"
+                    +"<table>"
+                    +    "<tr><td><iframe width='500' height='281' src='https://www.youtube.com/embed/" + data[elt.id].videoId + "?rel=0' frameborder='0' allowfullscreen></iframe></td>"
+                    +        "<td width=50% height=auto> <div id='chartdiv'></div> </td>"
+                    +    "</tr>"
+                    +    "<tr><td colspan='2'><a href='comments_sentiment/"+data[elt.id].analysisFile+"' target='_blank'><button class='button'>View the Sentiment Analysis file</button></a></td></tr>"
+                    +"</table>"
+                +"</div>";
+
+                // for(i=0;i<data.length;i++)
+                //     if(data[i].videoId == elt.id)
+                //         break;
+                draw_pie(data, elt.id);
+            }
+            
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>
+
+
+      <!-- Bootstrap core JavaScript -->
+  <!-- <script src="vendor/jquery/jquery.min.js"></script> -->
+  <script src="vendor/popper/popper.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>
